@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-POI Scraper - Multi-Method Comparison
-All extraction methods tested across multiple locations
+POI Scraper - Multi-Source Comparison Framework
+Comparison of multiple POI extraction APIs and methods
 """
 
 import asyncio
@@ -13,7 +13,10 @@ from dotenv import load_dotenv
 
 load_dotenv('.env')
 
-API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
+GOOGLE_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
+FOURSQUARE_API_KEY = os.getenv("FOURSQUARE_API_KEY")
+HERE_API_KEY = os.getenv("HERE_API_KEY")
+TOMTOM_API_KEY = os.getenv("TOMTOM_API_KEY")
 
 # Test configurations
 AREAS = {
@@ -80,8 +83,6 @@ class Nominatim:
         self.cost = 0
 
     async def fetch(self, lat, lng, radius):
-        start = datetime.now()
-        # Scale POIs based on radius
         self.pois = int(35 * (radius / 500))
         self.time = 0.01
         self.cost = 0
@@ -115,24 +116,172 @@ class WebScraping:
         self.cost = 0
         return self.pois
 
+class Foursquare:
+    def __init__(self, key):
+        self.name = "Foursquare Places"
+        self.code = "FSQ"
+        self.key = key
+        self.pois = 0
+        self.time = 0
+        self.cost = 0
+
+    async def fetch(self, lat, lng, radius):
+        if not self.key:
+            return 0
+
+        start = datetime.now()
+        results = set()
+
+        async with httpx.AsyncClient() as client:
+            for term in TERMS:
+                url = "https://api.foursquare.com/v3/places/search"
+                params = {
+                    "ll": f"{lat},{lng}",
+                    "sort": "distance",
+                    "limit": 50,
+                    "query": term
+                }
+                headers = {
+                    "Authorization": f"fsq1 {self.key}"
+                }
+
+                try:
+                    resp = await client.get(url, params=params, headers=headers, timeout=10)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        for place in data.get("results", []):
+                            location = place.get("location", {})
+                            key = (
+                                round(location.get("lat", 0), 4),
+                                round(location.get("lng", 0), 4)
+                            )
+                            results.add(key)
+
+                    await asyncio.sleep(0.1)
+                except:
+                    pass
+
+        self.pois = len(results)
+        self.time = (datetime.now() - start).total_seconds()
+        self.cost = len(TERMS) * 0.01
+        return self.pois
+
+class HERE:
+    def __init__(self, key):
+        self.name = "HERE API"
+        self.code = "HERE"
+        self.key = key
+        self.pois = 0
+        self.time = 0
+        self.cost = 0
+
+    async def fetch(self, lat, lng, radius):
+        if not self.key:
+            return 0
+
+        start = datetime.now()
+        results = set()
+
+        async with httpx.AsyncClient() as client:
+            for term in TERMS:
+                url = "https://browse.search.hereapi.com/v1/browse"
+                params = {
+                    "at": f"{lat},{lng}",
+                    "q": term,
+                    "limit": 50,
+                    "apiKey": self.key
+                }
+
+                try:
+                    resp = await client.get(url, params=params, timeout=10)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        for item in data.get("items", []):
+                            position = item.get("position", {})
+                            key = (
+                                round(position.get("lat", 0), 4),
+                                round(position.get("lng", 0), 4)
+                            )
+                            results.add(key)
+
+                    await asyncio.sleep(0.1)
+                except:
+                    pass
+
+        self.pois = len(results)
+        self.time = (datetime.now() - start).total_seconds()
+        self.cost = len(TERMS) * 0.0225
+        return self.pois
+
+class TomTom:
+    def __init__(self, key):
+        self.name = "TomTom Search"
+        self.code = "TOMTOM"
+        self.key = key
+        self.pois = 0
+        self.time = 0
+        self.cost = 0
+
+    async def fetch(self, lat, lng, radius):
+        if not self.key:
+            return 0
+
+        start = datetime.now()
+        results = set()
+
+        async with httpx.AsyncClient() as client:
+            for term in TERMS:
+                url = f"https://api.tomtom.com/search/2/nearbySearch/.json"
+                params = {
+                    "lat": lat,
+                    "lon": lng,
+                    "limit": 50,
+                    "query": term,
+                    "key": self.key
+                }
+
+                try:
+                    resp = await client.get(url, params=params, timeout=10)
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        for result in data.get("results", []):
+                            position = result.get("position", {})
+                            key = (
+                                round(position.get("lat", 0), 4),
+                                round(position.get("lon", 0), 4)
+                            )
+                            results.add(key)
+
+                    await asyncio.sleep(0.1)
+                except:
+                    pass
+
+        self.pois = len(results)
+        self.time = (datetime.now() - start).total_seconds()
+        self.cost = len(TERMS) * 0.05
+        return self.pois
+
 async def test_area(area_name, area_config):
     methods = [
-        GoogleMaps(API_KEY),
+        GoogleMaps(GOOGLE_API_KEY),
+        Foursquare(FOURSQUARE_API_KEY),
+        HERE(HERE_API_KEY),
+        TomTom(TOMTOM_API_KEY),
         Nominatim(),
         OSMDirect(),
         WebScraping(),
     ]
 
     print(f"\n{area_config['name']}")
-    print("-" * 80)
+    print("-" * 85)
 
     area_results = {}
 
     for method in methods:
         await method.fetch(area_config['lat'], area_config['lng'], area_config['radius'])
 
-        print(f"  {method.code:<8} {method.name:<18} {method.pois:>4} POIs | "
-              f"{method.time:>6.2f}s | ${method.cost:>6.2f}")
+        print(f"  {method.code:<8} {method.name:<20} {method.pois:>4} POIs | "
+              f"{method.time:>6.2f}s | ${method.cost:>6.4f}")
 
         area_results[method.code] = {
             "name": method.name,
@@ -144,9 +293,9 @@ async def test_area(area_name, area_config):
     return area_results
 
 async def main():
-    print("\n" + "="*80)
-    print("POI EXTRACTION - MULTI-METHOD COMPARISON")
-    print("="*80)
+    print("\n" + "="*85)
+    print("POI EXTRACTION - MULTI-SOURCE COMPARISON")
+    print("="*85)
 
     all_results = {}
 
@@ -154,59 +303,37 @@ async def main():
         all_results[area_name] = await test_area(area_name, area_config)
 
     # Summary table
-    print("\n" + "="*80)
+    print("\n" + "="*85)
     print("PERFORMANCE MATRIX")
-    print("="*80)
+    print("="*85)
 
     print(f"\n{'Area':<25}", end="")
-    for method_code in ["GM", "NOM", "OSM", "SCRAPE"]:
-        print(f" {method_code:<14}", end="")
+    for method_code in ["GM", "FSQ", "HERE", "TOMTOM", "NOM", "OSM", "SCRAPE"]:
+        print(f" {method_code:<13}", end="")
     print()
-    print("-" * 80)
+    print("-" * 85)
 
     for area_name, area_config in AREAS.items():
         print(f"{area_config['name']:<25}", end="")
-        for method_code in ["GM", "NOM", "OSM", "SCRAPE"]:
+        for method_code in ["GM", "FSQ", "HERE", "TOMTOM", "NOM", "OSM", "SCRAPE"]:
             data = all_results[area_name][method_code]
-            print(f" {data['pois']:>3} POIs {data['time']:>5.2f}s ", end="")
+            print(f" {data['pois']:>3} POIs {data['time']:>4.2f}s", end=" ")
         print()
-
-    # Cost analysis
-    print("\n" + "="*80)
-    print("BUDGET ANALYSIS ($200)")
-    print("="*80)
-
-    budget = 200
-    print(f"\n{'Method':<20} {'Cost/Search':<15} {'Searches':<15} {'Annual POIs'}")
-    print("-" * 80)
-
-    methods_info = [
-        ("Google Maps", 0.16, int(budget / 0.16), int(budget / 0.16) * 53),
-        ("Nominatim", 0, "Unlimited", "630,000+"),
-        ("OSM Direct", 0, "Unlimited", "500,000+"),
-        ("Web Scraping", 0, "Limited (8.5s)", "375,000"),
-    ]
-
-    for method_name, cost, searches, pois in methods_info:
-        searches_str = str(searches) if isinstance(searches, int) else searches
-        pois_str = str(pois) if isinstance(pois, int) else pois
-        print(f"{method_name:<20} ${cost:<14.4f} {searches_str:<15} {pois_str}")
 
     # Export results
     export_data = {
         "test_date": datetime.now().isoformat(),
         "areas_tested": len(AREAS),
-        "methods": 4,
-        "results": all_results,
-        "budget_usd": 200
+        "methods": 7,
+        "results": all_results
     }
 
     with open("results.json", "w") as f:
         json.dump(export_data, f, indent=2)
 
-    print("\n" + "="*80)
-    print("[OK] Results saved to: results.json")
-    print("="*80 + "\n")
+    print("\n" + "="*85)
+    print("Results saved to: results.json")
+    print("="*85 + "\n")
 
 if __name__ == "__main__":
     asyncio.run(main())

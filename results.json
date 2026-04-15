@@ -1,14 +1,32 @@
 {
-  "test_date": "2026-04-15T11:48:02.857980",
+  "test_date": "2026-04-15T11:49:28.692021",
   "areas_tested": 3,
-  "methods": 4,
+  "methods": 7,
   "results": {
     "times_square_500m": {
       "GM": {
         "name": "Google Maps",
         "pois": 53,
-        "time": 2.099508,
+        "time": 1.763489,
         "cost": 0.16
+      },
+      "FSQ": {
+        "name": "Foursquare Places",
+        "pois": 0,
+        "time": 0,
+        "cost": 0
+      },
+      "HERE": {
+        "name": "HERE API",
+        "pois": 0,
+        "time": 0,
+        "cost": 0
+      },
+      "TOMTOM": {
+        "name": "TomTom Search",
+        "pois": 0,
+        "time": 0,
+        "cost": 0
       },
       "NOM": {
         "name": "Nominatim",
@@ -33,8 +51,26 @@
       "GM": {
         "name": "Google Maps",
         "pois": 95,
-        "time": 2.414001,
+        "time": 2.182295,
         "cost": 0.16
+      },
+      "FSQ": {
+        "name": "Foursquare Places",
+        "pois": 0,
+        "time": 0,
+        "cost": 0
+      },
+      "HERE": {
+        "name": "HERE API",
+        "pois": 0,
+        "time": 0,
+        "cost": 0
+      },
+      "TOMTOM": {
+        "name": "TomTom Search",
+        "pois": 0,
+        "time": 0,
+        "cost": 0
       },
       "NOM": {
         "name": "Nominatim",
@@ -59,8 +95,26 @@
       "GM": {
         "name": "Google Maps",
         "pois": 71,
-        "time": 2.151709,
+        "time": 2.069839,
         "cost": 0.16
+      },
+      "FSQ": {
+        "name": "Foursquare Places",
+        "pois": 0,
+        "time": 0,
+        "cost": 0
+      },
+      "HERE": {
+        "name": "HERE API",
+        "pois": 0,
+        "time": 0,
+        "cost": 0
+      },
+      "TOMTOM": {
+        "name": "TomTom Search",
+        "pois": 0,
+        "time": 0,
+        "cost": 0
       },
       "NOM": {
         "name": "Nominatim",
@@ -81,6 +135,5 @@
         "cost": 0
       }
     }
-  },
-  "budget_usd": 200
+  }
 }
