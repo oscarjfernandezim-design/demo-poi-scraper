@@ -8,15 +8,13 @@ import asyncio
 import httpx
 import json
 import os
+import math
 from datetime import datetime
 from dotenv import load_dotenv
 
 load_dotenv('.env')
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_MAPS_API_KEY")
-FOURSQUARE_API_KEY = os.getenv("FOURSQUARE_API_KEY")
-HERE_API_KEY = os.getenv("HERE_API_KEY")
-TOMTOM_API_KEY = os.getenv("TOMTOM_API_KEY")
 
 # Test configurations
 AREAS = {
@@ -102,6 +100,63 @@ class OSMDirect:
         self.cost = 0
         return self.pois
 
+class OverpassAPI:
+    def __init__(self):
+        self.name = "Overpass API"
+        self.code = "OVERPASS"
+        self.pois = 0
+        self.time = 0
+        self.cost = 0
+
+    async def fetch(self, lat, lng, radius):
+        start = datetime.now()
+        results = set()
+
+        # Calculate bbox from lat/lng and radius
+        lat_offset = radius / 111000
+        lng_offset = radius / (111000 * math.cos(math.radians(lat)))
+
+        bbox = f"{lat - lat_offset},{lng - lng_offset},{lat + lat_offset},{lng + lng_offset}"
+
+        async with httpx.AsyncClient() as client:
+            for term in TERMS:
+                osm_tag = self._term_to_osm(term)
+                query = f"""
+                [bbox:{bbox}];
+                ({osm_tag});
+                out geom;
+                """
+
+                try:
+                    url = "https://overpass-api.de/api/interpreter"
+                    resp = await client.post(url, data=query, timeout=15)
+
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        for elem in data.get("elements", []):
+                            if "lat" in elem and "lon" in elem:
+                                key = (round(elem["lat"], 4), round(elem["lon"], 4))
+                                results.add(key)
+
+                    await asyncio.sleep(1)
+                except:
+                    pass
+
+        self.pois = len(results)
+        self.time = (datetime.now() - start).total_seconds()
+        self.cost = 0
+        return self.pois
+
+    def _term_to_osm(self, term):
+        mapping = {
+            "restaurant": 'node["amenity"="restaurant"]',
+            "cafe": 'node["amenity"="cafe"]',
+            "library": 'node["amenity"="library"]',
+            "pharmacy": 'node["amenity"="pharmacy"]',
+            "bank": 'node["amenity"="bank"]'
+        }
+        return mapping.get(term, f'node["name"~"{term}"]')
+
 class WebScraping:
     def __init__(self):
         self.name = "Web Scraping"
@@ -116,159 +171,12 @@ class WebScraping:
         self.cost = 0
         return self.pois
 
-class Foursquare:
-    def __init__(self, key):
-        self.name = "Foursquare Places"
-        self.code = "FSQ"
-        self.key = key
-        self.pois = 0
-        self.time = 0
-        self.cost = 0
-
-    async def fetch(self, lat, lng, radius):
-        if not self.key:
-            return 0
-
-        start = datetime.now()
-        results = set()
-
-        async with httpx.AsyncClient() as client:
-            for term in TERMS:
-                url = "https://api.foursquare.com/v3/places/search"
-                params = {
-                    "ll": f"{lat},{lng}",
-                    "sort": "distance",
-                    "limit": 50,
-                    "query": term
-                }
-                headers = {
-                    "Authorization": f"fsq1 {self.key}"
-                }
-
-                try:
-                    resp = await client.get(url, params=params, headers=headers, timeout=10)
-                    if resp.status_code == 200:
-                        data = resp.json()
-                        for place in data.get("results", []):
-                            location = place.get("location", {})
-                            key = (
-                                round(location.get("lat", 0), 4),
-                                round(location.get("lng", 0), 4)
-                            )
-                            results.add(key)
-
-                    await asyncio.sleep(0.1)
-                except:
-                    pass
-
-        self.pois = len(results)
-        self.time = (datetime.now() - start).total_seconds()
-        self.cost = len(TERMS) * 0.01
-        return self.pois
-
-class HERE:
-    def __init__(self, key):
-        self.name = "HERE API"
-        self.code = "HERE"
-        self.key = key
-        self.pois = 0
-        self.time = 0
-        self.cost = 0
-
-    async def fetch(self, lat, lng, radius):
-        if not self.key:
-            return 0
-
-        start = datetime.now()
-        results = set()
-
-        async with httpx.AsyncClient() as client:
-            for term in TERMS:
-                url = "https://browse.search.hereapi.com/v1/browse"
-                params = {
-                    "at": f"{lat},{lng}",
-                    "q": term,
-                    "limit": 50,
-                    "apiKey": self.key
-                }
-
-                try:
-                    resp = await client.get(url, params=params, timeout=10)
-                    if resp.status_code == 200:
-                        data = resp.json()
-                        for item in data.get("items", []):
-                            position = item.get("position", {})
-                            key = (
-                                round(position.get("lat", 0), 4),
-                                round(position.get("lng", 0), 4)
-                            )
-                            results.add(key)
-
-                    await asyncio.sleep(0.1)
-                except:
-                    pass
-
-        self.pois = len(results)
-        self.time = (datetime.now() - start).total_seconds()
-        self.cost = len(TERMS) * 0.0225
-        return self.pois
-
-class TomTom:
-    def __init__(self, key):
-        self.name = "TomTom Search"
-        self.code = "TOMTOM"
-        self.key = key
-        self.pois = 0
-        self.time = 0
-        self.cost = 0
-
-    async def fetch(self, lat, lng, radius):
-        if not self.key:
-            return 0
-
-        start = datetime.now()
-        results = set()
-
-        async with httpx.AsyncClient() as client:
-            for term in TERMS:
-                url = f"https://api.tomtom.com/search/2/nearbySearch/.json"
-                params = {
-                    "lat": lat,
-                    "lon": lng,
-                    "limit": 50,
-                    "query": term,
-                    "key": self.key
-                }
-
-                try:
-                    resp = await client.get(url, params=params, timeout=10)
-                    if resp.status_code == 200:
-                        data = resp.json()
-                        for result in data.get("results", []):
-                            position = result.get("position", {})
-                            key = (
-                                round(position.get("lat", 0), 4),
-                                round(position.get("lon", 0), 4)
-                            )
-                            results.add(key)
-
-                    await asyncio.sleep(0.1)
-                except:
-                    pass
-
-        self.pois = len(results)
-        self.time = (datetime.now() - start).total_seconds()
-        self.cost = len(TERMS) * 0.05
-        return self.pois
-
 async def test_area(area_name, area_config):
     methods = [
         GoogleMaps(GOOGLE_API_KEY),
-        Foursquare(FOURSQUARE_API_KEY),
-        HERE(HERE_API_KEY),
-        TomTom(TOMTOM_API_KEY),
         Nominatim(),
         OSMDirect(),
+        OverpassAPI(),
         WebScraping(),
     ]
 
@@ -280,7 +188,7 @@ async def test_area(area_name, area_config):
     for method in methods:
         await method.fetch(area_config['lat'], area_config['lng'], area_config['radius'])
 
-        print(f"  {method.code:<8} {method.name:<20} {method.pois:>4} POIs | "
+        print(f"  {method.code:<10} {method.name:<20} {method.pois:>4} POIs | "
               f"{method.time:>6.2f}s | ${method.cost:>6.4f}")
 
         area_results[method.code] = {
@@ -308,14 +216,14 @@ async def main():
     print("="*85)
 
     print(f"\n{'Area':<25}", end="")
-    for method_code in ["GM", "FSQ", "HERE", "TOMTOM", "NOM", "OSM", "SCRAPE"]:
+    for method_code in ["GM", "NOM", "OSM", "OVERPASS", "SCRAPE"]:
         print(f" {method_code:<13}", end="")
     print()
     print("-" * 85)
 
     for area_name, area_config in AREAS.items():
         print(f"{area_config['name']:<25}", end="")
-        for method_code in ["GM", "FSQ", "HERE", "TOMTOM", "NOM", "OSM", "SCRAPE"]:
+        for method_code in ["GM", "NOM", "OSM", "OVERPASS", "SCRAPE"]:
             data = all_results[area_name][method_code]
             print(f" {data['pois']:>3} POIs {data['time']:>4.2f}s", end=" ")
         print()
@@ -324,7 +232,7 @@ async def main():
     export_data = {
         "test_date": datetime.now().isoformat(),
         "areas_tested": len(AREAS),
-        "methods": 7,
+        "methods": 5,
         "results": all_results
     }
 

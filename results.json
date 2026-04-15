@@ -1,32 +1,14 @@
 {
-  "test_date": "2026-04-15T11:49:28.692021",
+  "test_date": "2026-04-15T11:57:55.690545",
   "areas_tested": 3,
-  "methods": 7,
+  "methods": 5,
   "results": {
     "times_square_500m": {
       "GM": {
         "name": "Google Maps",
         "pois": 53,
-        "time": 1.763489,
+        "time": 2.164669,
         "cost": 0.16
-      },
-      "FSQ": {
-        "name": "Foursquare Places",
-        "pois": 0,
-        "time": 0,
-        "cost": 0
-      },
-      "HERE": {
-        "name": "HERE API",
-        "pois": 0,
-        "time": 0,
-        "cost": 0
-      },
-      "TOMTOM": {
-        "name": "TomTom Search",
-        "pois": 0,
-        "time": 0,
-        "cost": 0
       },
       "NOM": {
         "name": "Nominatim",
@@ -38,6 +20,12 @@
         "name": "OSM Direct",
         "pois": 25,
         "time": 0.02,
+        "cost": 0
+      },
+      "OVERPASS": {
+        "name": "Overpass API",
+        "pois": 0,
+        "time": 8.38378,
         "cost": 0
       },
       "SCRAPE": {
@@ -51,26 +39,8 @@
       "GM": {
         "name": "Google Maps",
         "pois": 95,
-        "time": 2.182295,
+        "time": 2.329656,
         "cost": 0.16
-      },
-      "FSQ": {
-        "name": "Foursquare Places",
-        "pois": 0,
-        "time": 0,
-        "cost": 0
-      },
-      "HERE": {
-        "name": "HERE API",
-        "pois": 0,
-        "time": 0,
-        "cost": 0
-      },
-      "TOMTOM": {
-        "name": "TomTom Search",
-        "pois": 0,
-        "time": 0,
-        "cost": 0
       },
       "NOM": {
         "name": "Nominatim",
@@ -84,6 +54,12 @@
         "time": 0.02,
         "cost": 0
       },
+      "OVERPASS": {
+        "name": "Overpass API",
+        "pois": 0,
+        "time": 8.371866,
+        "cost": 0
+      },
       "SCRAPE": {
         "name": "Web Scraping",
         "pois": 100,
@@ -95,26 +71,8 @@
       "GM": {
         "name": "Google Maps",
         "pois": 71,
-        "time": 2.069839,
+        "time": 2.412749,
         "cost": 0.16
-      },
-      "FSQ": {
-        "name": "Foursquare Places",
-        "pois": 0,
-        "time": 0,
-        "cost": 0
-      },
-      "HERE": {
-        "name": "HERE API",
-        "pois": 0,
-        "time": 0,
-        "cost": 0
-      },
-      "TOMTOM": {
-        "name": "TomTom Search",
-        "pois": 0,
-        "time": 0,
-        "cost": 0
       },
       "NOM": {
         "name": "Nominatim",
@@ -126,6 +84,12 @@
         "name": "OSM Direct",
         "pois": 25,
         "time": 0.02,
+        "cost": 0
+      },
+      "OVERPASS": {
+        "name": "Overpass API",
+        "pois": 0,
+        "time": 8.384652,
         "cost": 0
       },
       "SCRAPE": {
