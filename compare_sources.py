@@ -8,7 +8,6 @@ import asyncio
 import httpx
 import json
 import os
-import math
 from datetime import datetime
 from dotenv import load_dotenv
 
@@ -112,50 +111,35 @@ class OverpassAPI:
         start = datetime.now()
         results = set()
 
-        # Calculate bbox from lat/lng and radius
-        lat_offset = radius / 111000
-        lng_offset = radius / (111000 * math.cos(math.radians(lat)))
-
-        bbox = f"{lat - lat_offset},{lng - lng_offset},{lat + lat_offset},{lng + lng_offset}"
+        # Using nwr (nodes, ways, relations) query
+        query = f"""[out:json][timeout:50];
+nwr["amenity"~"restaurant|cafe|pharmacy|library|bank"](around:{radius},{lat},{lng});
+out center;
+"""
 
         async with httpx.AsyncClient() as client:
-            for term in TERMS:
-                osm_tag = self._term_to_osm(term)
-                query = f"""
-                [bbox:{bbox}];
-                ({osm_tag});
-                out geom;
-                """
+            try:
+                # Use Kumi mirror (more reliable)
+                resp = await client.post(
+                    "https://overpass.kumi.systems/api/interpreter",
+                    data=query,
+                    timeout=30
+                )
 
-                try:
-                    url = "https://overpass-api.de/api/interpreter"
-                    resp = await client.post(url, data=query, timeout=15)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    for elem in data.get("elements", []):
+                        if "center" in elem:
+                            key = (round(elem["center"]["lat"], 4), round(elem["center"]["lon"], 4))
+                            results.add(key)
 
-                    if resp.status_code == 200:
-                        data = resp.json()
-                        for elem in data.get("elements", []):
-                            if "lat" in elem and "lon" in elem:
-                                key = (round(elem["lat"], 4), round(elem["lon"], 4))
-                                results.add(key)
-
-                    await asyncio.sleep(1)
-                except:
-                    pass
+            except:
+                pass
 
         self.pois = len(results)
         self.time = (datetime.now() - start).total_seconds()
         self.cost = 0
         return self.pois
-
-    def _term_to_osm(self, term):
-        mapping = {
-            "restaurant": 'node["amenity"="restaurant"]',
-            "cafe": 'node["amenity"="cafe"]',
-            "library": 'node["amenity"="library"]',
-            "pharmacy": 'node["amenity"="pharmacy"]',
-            "bank": 'node["amenity"="bank"]'
-        }
-        return mapping.get(term, f'node["name"~"{term}"]')
 
 class WebScraping:
     def __init__(self):
@@ -181,14 +165,14 @@ async def test_area(area_name, area_config):
     ]
 
     print(f"\n{area_config['name']}")
-    print("-" * 85)
+    print("-" * 80)
 
     area_results = {}
 
     for method in methods:
         await method.fetch(area_config['lat'], area_config['lng'], area_config['radius'])
 
-        print(f"  {method.code:<10} {method.name:<20} {method.pois:>4} POIs | "
+        print(f"  {method.code:<10} {method.name:<18} {method.pois:>4} POIs | "
               f"{method.time:>6.2f}s | ${method.cost:>6.4f}")
 
         area_results[method.code] = {
@@ -201,9 +185,9 @@ async def test_area(area_name, area_config):
     return area_results
 
 async def main():
-    print("\n" + "="*85)
+    print("\n" + "="*80)
     print("POI EXTRACTION - MULTI-SOURCE COMPARISON")
-    print("="*85)
+    print("="*80)
 
     all_results = {}
 
@@ -211,15 +195,15 @@ async def main():
         all_results[area_name] = await test_area(area_name, area_config)
 
     # Summary table
-    print("\n" + "="*85)
+    print("\n" + "="*80)
     print("PERFORMANCE MATRIX")
-    print("="*85)
+    print("="*80)
 
     print(f"\n{'Area':<25}", end="")
     for method_code in ["GM", "NOM", "OSM", "OVERPASS", "SCRAPE"]:
         print(f" {method_code:<13}", end="")
     print()
-    print("-" * 85)
+    print("-" * 80)
 
     for area_name, area_config in AREAS.items():
         print(f"{area_config['name']:<25}", end="")
@@ -239,9 +223,9 @@ async def main():
     with open("results.json", "w") as f:
         json.dump(export_data, f, indent=2)
 
-    print("\n" + "="*85)
+    print("\n" + "="*80)
     print("Results saved to: results.json")
-    print("="*85 + "\n")
+    print("="*80 + "\n")
 
 if __name__ == "__main__":
     asyncio.run(main())

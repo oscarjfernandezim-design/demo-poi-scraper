@@ -1,5 +1,5 @@
 {
-  "test_date": "2026-04-15T11:57:55.690545",
+  "test_date": "2026-04-15T12:21:24.091176",
   "areas_tested": 3,
   "methods": 5,
   "results": {
@@ -7,7 +7,7 @@
       "GM": {
         "name": "Google Maps",
         "pois": 53,
-        "time": 2.164669,
+        "time": 2.489275,
         "cost": 0.16
       },
       "NOM": {
@@ -24,8 +24,8 @@
       },
       "OVERPASS": {
         "name": "Overpass API",
-        "pois": 0,
-        "time": 8.38378,
+        "pois": 1,
+        "time": 1.572122,
         "cost": 0
       },
       "SCRAPE": {
@@ -39,7 +39,7 @@
       "GM": {
         "name": "Google Maps",
         "pois": 95,
-        "time": 2.329656,
+        "time": 2.565116,
         "cost": 0.16
       },
       "NOM": {
@@ -56,8 +56,8 @@
       },
       "OVERPASS": {
         "name": "Overpass API",
-        "pois": 0,
-        "time": 8.371866,
+        "pois": 5,
+        "time": 7.449167,
         "cost": 0
       },
       "SCRAPE": {
@@ -71,7 +71,7 @@
       "GM": {
         "name": "Google Maps",
         "pois": 71,
-        "time": 2.412749,
+        "time": 2.151046,
         "cost": 0.16
       },
       "NOM": {
@@ -89,7 +89,7 @@
       "OVERPASS": {
         "name": "Overpass API",
         "pois": 0,
-        "time": 8.384652,
+        "time": 30.640153,
         "cost": 0
       },
       "SCRAPE": {
