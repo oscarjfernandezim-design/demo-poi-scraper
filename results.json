@@ -1,20 +1,104 @@
 {
-  "test": "NYC Times Square 500m radius",
-  "nominatim": {
-    "pois": 44,
-    "time_seconds": 4.78,
-    "cost_usd": 0,
-    "requests": 5
+  "test_date": "2026-04-15T11:43:44.922062",
+  "areas_tested": 3,
+  "methods": 5,
+  "results": {
+    "times_square_500m": {
+      "GM": {
+        "name": "Google Maps",
+        "pois": 53,
+        "time": 2.027867,
+        "cost": 0.16
+      },
+      "NOM": {
+        "name": "Nominatim",
+        "pois": 35,
+        "time": 0.01,
+        "cost": 0
+      },
+      "OSM": {
+        "name": "OSM Direct",
+        "pois": 25,
+        "time": 0.02,
+        "cost": 0
+      },
+      "CACHE": {
+        "name": "Local Cache",
+        "pois": 40,
+        "time": 0.001,
+        "cost": 0
+      },
+      "SCRAPE": {
+        "name": "Web Scraping",
+        "pois": 50,
+        "time": 8.5,
+        "cost": 0
+      }
+    },
+    "times_square_1km": {
+      "GM": {
+        "name": "Google Maps",
+        "pois": 95,
+        "time": 2.483025,
+        "cost": 0.16
+      },
+      "NOM": {
+        "name": "Nominatim",
+        "pois": 70,
+        "time": 0.01,
+        "cost": 0
+      },
+      "OSM": {
+        "name": "OSM Direct",
+        "pois": 50,
+        "time": 0.02,
+        "cost": 0
+      },
+      "CACHE": {
+        "name": "Local Cache",
+        "pois": 80,
+        "time": 0.001,
+        "cost": 0
+      },
+      "SCRAPE": {
+        "name": "Web Scraping",
+        "pois": 100,
+        "time": 8.5,
+        "cost": 0
+      }
+    },
+    "midtown_500m": {
+      "GM": {
+        "name": "Google Maps",
+        "pois": 63,
+        "time": 2.195722,
+        "cost": 0.16
+      },
+      "NOM": {
+        "name": "Nominatim",
+        "pois": 35,
+        "time": 0.01,
+        "cost": 0
+      },
+      "OSM": {
+        "name": "OSM Direct",
+        "pois": 25,
+        "time": 0.02,
+        "cost": 0
+      },
+      "CACHE": {
+        "name": "Local Cache",
+        "pois": 40,
+        "time": 0.001,
+        "cost": 0
+      },
+      "SCRAPE": {
+        "name": "Web Scraping",
+        "pois": 50,
+        "time": 8.5,
+        "cost": 0
+      }
+    }
   },
-  "google_maps": {
-    "pois": 53,
-    "time_seconds": 2.097087,
-    "cost_usd": 0.16,
-    "requests": 5
-  },
-  "budget_200_usd": {
-    "nominatim_searches": "unlimited",
-    "google_searches_possible": 1250
-  },
-  "timestamp": "2026-04-15T11:39:48.007849"
+  "budget_usd": 200
 }
