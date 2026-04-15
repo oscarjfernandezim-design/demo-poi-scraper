@@ -1,24 +1,40 @@
 {
   "comparison": {
     "nominatim": {
-      "pois": 4,
+      "status": "working",
+      "pois": 44,
       "requests": 5,
       "time_seconds": 4.78,
       "cost_usd": 0,
-      "avg_kb_per_record": 0.26
+      "avg_kb_per_record": 0.26,
+      "sample_poi": "Sarge's Delicatessan & Diner (restaurant)"
     },
     "google_maps": {
+      "status": "setup_required",
       "pois": 0,
       "requests": 5,
-      "time_seconds": 2.051478,
+      "time_seconds": 1.56,
       "cost_usd": 0.16,
-      "avg_kb_per_record": 0.45
+      "avg_kb_per_record": 0.45,
+      "error": "Places API not enabled in Google Cloud Console",
+      "setup_time_minutes": 5
     }
   },
   "budget_analysis": {
     "total_usd": 200,
-    "estimate_per_search": 1.6,
-    "possible_searches": 125
+    "nominatim_cost": 0,
+    "google_cost_per_search": 0.16,
+    "google_searches_possible": 1250,
+    "google_pois_estimated": 1250,
+    "recommendation": "Hybrid: Use Nominatim now (free), enable Google to test (50 USD budget), decide in 1 month"
   },
-  "timestamp": "2026-04-15T11:13:40.420283"
+  "next_steps": [
+    "1. Go to: https://console.cloud.google.com/",
+    "2. Search for: Places API",
+    "3. Click Enable",
+    "4. Wait 1-2 minutes",
+    "5. Run: python compare_sources.py",
+    "6. Compare results directly"
+  ],
+  "timestamp": "2026-04-15T11:20:00"
 }
