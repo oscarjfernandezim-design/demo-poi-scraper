@@ -103,53 +103,30 @@ class OutputManager:
         scraper_stats: dict = None
     ):
         """Print formatted report to console"""
-        print("\n" + "="*70)
-        print("[REPORT] POI SCRAPER DEMO REPORT")
-        print("="*70)
+        if not pois:
+            print("no POIs collected")
+            return
 
-        # Data statistics
-        if statistics:
-            print("\n[DATA STATISTICS]:")
-            print(f"  [OK] Total POIs: {statistics.get('total_pois', 0)}")
-            print(f"  [OK] Unique Types: {statistics.get('unique_types', 0)}")
-            print(f"  [OK] Total Size: {statistics.get('total_size_kb', 0)} KB")
-            print(f"  [OK] Avg per Record: {statistics.get('average_kb_per_record', 0)} KB")
-            print(f"  [OK] Min Record: {statistics.get('min_record_kb', 0)} KB")
-            print(f"  [OK] Max Record: {statistics.get('max_record_kb', 0)} KB")
+        print()
 
-            if "types_breakdown" in statistics:
-                print("\n  [BREAKDOWN]:")
-                for poi_type, count in statistics["types_breakdown"].items():
-                    print(f"    - {poi_type}: {count}")
+        # Query results summary
+        if statistics and "types_breakdown" in statistics:
+            types = statistics["types_breakdown"]
+            print(f"scraping results - {len(pois)} POIs")
+            for poi_type, count in types.items():
+                # Pad the type name to align columns
+                print(f"  {poi_type:<12} {count} result{'s' if count != 1 else ''}")
 
-        # Scraper performance
+        # Performance metrics
         if scraper_stats:
-            print("\n[SCRAPER PERFORMANCE]:")
-            print(f"  [OK] Total Requests: {scraper_stats.get('total_requests', 0)}")
-            print(f"  [OK] Successful: {scraper_stats.get('successful_requests', 0)}")
-            print(f"  [OK] Failed: {scraper_stats.get('failed_requests', 0)}")
-            print(f"  [OK] Success Rate: {scraper_stats.get('success_rate', 0)}%")
-            print(f"  [OK] Duration: {scraper_stats.get('duration_seconds', 0)}s")
-            print(f"  [OK] Requests/sec: {scraper_stats.get('requests_per_second', 0)}")
+            duration = scraper_stats.get("duration_seconds", 0)
+            avg_kb = statistics.get("average_kb_per_record", 0) if statistics else 0
+            print(f"\n{len(pois)} POIs collected in {duration}s - avg {avg_kb:.2f} KB/record")
+            print(f"success rate: {scraper_stats.get('success_rate', 0):.0f}%")
 
-        # Sample data
-        if pois:
-            print("\n[SAMPLE POIs]:")
-            for i, poi in enumerate(pois[:5], 1):
-                print(f"\n  {i}. {poi.name}")
-                print(f"     Type: {poi.poi_type}")
-                print(f"     Coords: ({poi.latitude:.4f}, {poi.longitude:.4f})")
-                if poi.address:
-                    addr = poi.address
-                    addr_parts = [
-                        addr.house_number,
-                        addr.street,
-                        addr.city,
-                        addr.postcode
-                    ]
-                    addr_str = ", ".join([p for p in addr_parts if p])
-                    if addr_str:
-                        print(f"     Address: {addr_str}")
-                print(f"     Size: {poi.size_kb()} KB")
+        # File exports
+        print(f"\noutput files:")
+        print(f"  - ./output/pois_demo.json")
+        print(f"  - ./output/pois_demo.csv")
 
-        print("\n" + "="*70 + "\n")
+        print()

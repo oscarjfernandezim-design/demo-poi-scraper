@@ -27,9 +27,7 @@ async def run_scraper_demo():
     4. Exports to JSON/CSV
     5. Prints performance report
     """
-    print("\n[START] Starting POI Scraper Demo...")
-    print(f"[TARGET] {DEMO_RECORD_COUNT} POIs from {len(DEMO_SEARCH_TERMS)} categories")
-    print(f"[REGION] NYC Bounding Box\n")
+    print("\nstarting scraper - NYC bbox, 5 categories, target 100 POIs\n")
 
     start_time = time.time()
     all_pois: List[POI] = []
@@ -42,8 +40,6 @@ async def run_scraper_demo():
 
         # Search for POIs across multiple terms
         for search_term in DEMO_SEARCH_TERMS:
-            print(f"[SEARCH] Searching for '{search_term}'...")
-
             # Create generator from scraper
             poi_generator = scraper.search_pois(
                 query=search_term,
@@ -52,20 +48,22 @@ async def run_scraper_demo():
             )
 
             # Process with deduplication in real-time
+            count = 0
             async for poi in processor.deduplicate_and_validate(poi_generator):
                 all_pois.append(poi)
-                print(f"   [OK] {poi.name} ({poi.poi_type}) - {poi.size_kb()} KB")
+                count += 1
 
                 # Stop if we reach target
                 if len(all_pois) >= DEMO_RECORD_COUNT:
                     break
 
+            # Print result for this category
+            print(f"{search_term:<12} {count} result{'s' if count != 1 else ''}")
+
             if len(all_pois) >= DEMO_RECORD_COUNT:
                 break
 
         scraper.stats["end_time"] = time.time()
-
-    print(f"\n[SUCCESS] Scraping complete! Collected {len(all_pois)} unique POIs\n")
 
     # Calculate statistics
     stats = DataProcessor.calculate_statistics(all_pois)
@@ -80,13 +78,11 @@ async def run_scraper_demo():
         statistics=stats,
         scraper_stats=scraper_stats
     )
-    print(f"[OUTPUT] JSON exported to: {json_file}")
 
     csv_file = output_mgr.export_csv(
         all_pois,
         filename="pois_demo.csv"
     )
-    print(f"[OUTPUT] CSV exported to: {csv_file}")
 
     # Print comprehensive report
     output_mgr.print_report(all_pois, stats, scraper_stats)
@@ -100,16 +96,10 @@ def main():
         # Run async demo
         pois, stats, scraper_stats = asyncio.run(run_scraper_demo())
 
-        print("[OK] Demo completed successfully!")
-        print(f"\n[METRICS] Key Metrics:")
-        print(f"   - Average record size: {stats.get('average_kb_per_record', 0)} KB")
-        print(f"   - Success rate: {scraper_stats.get('success_rate', 0)}%")
-        print(f"   - Processing speed: {scraper_stats.get('requests_per_second', 0)} req/s")
-
     except KeyboardInterrupt:
-        print("\n[INTERRUPTED] Demo interrupted by user")
+        print("\ninterrupted by user")
     except Exception as e:
-        print(f"\n[ERROR] Error running demo: {e}")
+        print(f"\nerror: {e}")
         import traceback
         traceback.print_exc()
 
