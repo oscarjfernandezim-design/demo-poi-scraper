@@ -101,20 +101,6 @@ class OSMDirect:
         self.cost = 0
         return self.pois
 
-class LocalCache:
-    def __init__(self):
-        self.name = "Local Cache"
-        self.code = "CACHE"
-        self.pois = 0
-        self.time = 0
-        self.cost = 0
-
-    async def fetch(self, lat, lng, radius):
-        self.pois = int(40 * (radius / 500))
-        self.time = 0.001
-        self.cost = 0
-        return self.pois
-
 class WebScraping:
     def __init__(self):
         self.name = "Web Scraping"
@@ -134,7 +120,6 @@ async def test_area(area_name, area_config):
         GoogleMaps(API_KEY),
         Nominatim(),
         OSMDirect(),
-        LocalCache(),
         WebScraping(),
     ]
 
@@ -174,14 +159,14 @@ async def main():
     print("="*80)
 
     print(f"\n{'Area':<25}", end="")
-    for method_code in ["GM", "NOM", "OSM", "CACHE", "SCRAPE"]:
+    for method_code in ["GM", "NOM", "OSM", "SCRAPE"]:
         print(f" {method_code:<14}", end="")
     print()
     print("-" * 80)
 
     for area_name, area_config in AREAS.items():
         print(f"{area_config['name']:<25}", end="")
-        for method_code in ["GM", "NOM", "OSM", "CACHE", "SCRAPE"]:
+        for method_code in ["GM", "NOM", "OSM", "SCRAPE"]:
             data = all_results[area_name][method_code]
             print(f" {data['pois']:>3} POIs {data['time']:>5.2f}s ", end="")
         print()
@@ -199,7 +184,6 @@ async def main():
         ("Google Maps", 0.16, int(budget / 0.16), int(budget / 0.16) * 53),
         ("Nominatim", 0, "Unlimited", "630,000+"),
         ("OSM Direct", 0, "Unlimited", "500,000+"),
-        ("Local Cache", 0.001, int(budget / 0.001), "40,000,000+"),
         ("Web Scraping", 0, "Limited (8.5s)", "375,000"),
     ]
 
@@ -212,7 +196,7 @@ async def main():
     export_data = {
         "test_date": datetime.now().isoformat(),
         "areas_tested": len(AREAS),
-        "methods": 5,
+        "methods": 4,
         "results": all_results,
         "budget_usd": 200
     }

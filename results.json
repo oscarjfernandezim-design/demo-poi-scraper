@@ -1,13 +1,13 @@
 {
-  "test_date": "2026-04-15T11:43:44.922062",
+  "test_date": "2026-04-15T11:48:02.857980",
   "areas_tested": 3,
-  "methods": 5,
+  "methods": 4,
   "results": {
     "times_square_500m": {
       "GM": {
         "name": "Google Maps",
         "pois": 53,
-        "time": 2.027867,
+        "time": 2.099508,
         "cost": 0.16
       },
       "NOM": {
@@ -22,12 +22,6 @@
         "time": 0.02,
         "cost": 0
       },
-      "CACHE": {
-        "name": "Local Cache",
-        "pois": 40,
-        "time": 0.001,
-        "cost": 0
-      },
       "SCRAPE": {
         "name": "Web Scraping",
         "pois": 50,
@@ -39,7 +33,7 @@
       "GM": {
         "name": "Google Maps",
         "pois": 95,
-        "time": 2.483025,
+        "time": 2.414001,
         "cost": 0.16
       },
       "NOM": {
@@ -54,12 +48,6 @@
         "time": 0.02,
         "cost": 0
       },
-      "CACHE": {
-        "name": "Local Cache",
-        "pois": 80,
-        "time": 0.001,
-        "cost": 0
-      },
       "SCRAPE": {
         "name": "Web Scraping",
         "pois": 100,
@@ -70,8 +58,8 @@
     "midtown_500m": {
       "GM": {
         "name": "Google Maps",
-        "pois": 63,
-        "time": 2.195722,
+        "pois": 71,
+        "time": 2.151709,
         "cost": 0.16
       },
       "NOM": {
@@ -84,12 +72,6 @@
         "name": "OSM Direct",
         "pois": 25,
         "time": 0.02,
-        "cost": 0
-      },
-      "CACHE": {
-        "name": "Local Cache",
-        "pois": 40,
-        "time": 0.001,
         "cost": 0
       },
       "SCRAPE": {
