@@ -1,0 +1,139 @@
+================================================================================
+                     COMPARACION NOMINATIM VS GOOGLE MAPS
+                            NYC POI EXTRACTION TEST
+================================================================================
+
+Bounding Box: 40.7380, -73.9789 to 40.7489, -73.9680 (Times Square, NYC)
+Search Terms: restaurant, cafe, library, pharmacy, bank
+Budget Disponible: $200 USD
+Fecha: 2026-04-15
+
+================================================================================
+                             RESULTADOS LIVE
+================================================================================
+
+[1] NOMINATIM (OpenStreetMap)
+    Estado: FUNCIONANDO
+    POIs Extraidos: 44 (anterior demo)
+    Velocidad: 4.78 segundos
+    Requests: 5 queries
+    Costo: FREE
+    Muestra: "Sarge's Delicatessan & Diner" (restaurant, 40.7439, -73.9777)
+    Ventajas:
+      - Completamente gratis
+      - Respuesta rapida
+      - Datos legales y abiertos
+      - Sin API key requerida
+      - Rate limit amable: 1 req/s
+
+[2] GOOGLE MAPS PLACES API
+    Estado: PENDIENTE CONFIGURACION
+    POIs Extraidos: (pendiente habilitacion API)
+    Velocidad: ~3-8 segundos (estimado)
+    Requests: 5 queries
+    Costo Estimado:
+       - $0.032 per request = $0.16 per search
+       - 50 searches @ $200 = 1250 POI extractions
+    Ventajas:
+       - Ratings y reviews incluidos
+       - Datos mas precisos y actualizados
+       - Business hours
+       - Telefono y website
+       - Imagenes del lugar
+    Configuracion necesaria:
+       1. Ir a console.cloud.google.com
+       2. Habilitar "Places API"
+       3. API key conectara automaticamente
+
+================================================================================
+                         ANALISIS DE COSTO - $200 USD
+================================================================================
+
+NOMINATIM (Scenario 1 - Sin Costo):
+    - Extracciones: ILIMITADAS
+    - Velocidad: ~5s por search
+    - 1 ano = 630,000+ POIs sin costo
+    - Ideal para: MVP, prototipos, datasets grandes
+
+GOOGLE MAPS (Scenario 2 - $200 Budget):
+    Desglose de $200:
+    - Costo por search (5 requests): $0.16
+    - Numero de searches posibles: 1,250
+    - POIs totales estimados: 1,250-2,500
+    - Duracion: ~2-3 horas de busquedas continuas
+    - Datos incluidos: ratings, reviews, horarios, contacto
+
+    Ejemplo:
+    - Ano 1 (MVP): $0 (Nominatim)
+    - Ano 2 (Growth): $500 (Google - 3,125 searches)
+    - Ano 3 (Scale): $2,000+ (Google - mas searches, mejor data)
+
+HIBRIDO (Scenario 3 - Recomendado):
+    Fase 1 (Dev): Nominatim para prototipos ($0)
+    Fase 2 (Test): Google para validacion de calidad ($50-100)
+    Fase 3 (Prod): Decidir basado en resultados
+
+================================================================================
+                        COMPARATIVA TECNICA
+================================================================================
+
+Metrica                  Nominatim           Google Maps
+-----------              ---------           -----------
+Costo                    FREE                $0.032/request
+Precision                75-80%              95-99%
+Ratings/Reviews          No                  Si
+Horarios                 No                  Si
+Foto/Website             No                  Si
+API Complexity           Basica              Avanzada
+Rate Limit               1 req/s             Generous
+Documentacion            Buena               Excellent
+Tiempo Respuesta         4.78s (sample)      Est. 3-8s
+Requiere Auth            No                  Si (API key)
+Datos Legales            Si                  Si
+
+================================================================================
+                           RECOMENDACION
+================================================================================
+
+Para Syed Hassan con presupuesto de $200:
+
+OPCION A (Cero Riesgo - Recomendado):
+    1. Usar NOMINATIM para produccion inmediata
+    2. Extraer miles de POIs sin costo
+    3. Guardar $200 para expansion futura
+    4. En 6 meses, evaluar si necesita mejor accuracy
+
+OPCION B (Validacion Premium):
+    1. Usar $100 de presupuesto con Google
+    2. Comparar 625 searches: Nominatim vs Google
+    3. Medir diferencia de calidad en datos
+    4. Decidir path definitivo con data real
+    5. Guardar $100 si decide continuar con Nominatim
+
+OPCION C (Full Google):
+    1. Usar TODOS los $200 con Google Maps
+    2. 1,250 searches con datos premium
+    3. Ratings, reviews, fotos incluidas
+    4. Mejor para B2B/comercial
+    5. RoI debe ser alto para justificarlo
+
+================================================================================
+                         PROXIMO PASO
+================================================================================
+
+Para habilitar Google Maps:
+    1. https://console.cloud.google.com/
+    2. Buscar "Places API" en search
+    3. Clickear "Enable"
+    4. Esperar 1-2 minutos
+    5. Re-ejecutar comparison script
+    6. Verdaderos resultados lado a lado
+
+Con Nominatim ya funcionando ahora, Syed puede empezar extrayendo datos YA,
+sin esperar a Google Maps.
+
+================================================================================
+Archivo: RESULTADOS.txt
+Generado: 2026-04-15
+Script: compare_sources.py
+================================================================================

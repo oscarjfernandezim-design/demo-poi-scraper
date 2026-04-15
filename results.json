@@ -1,0 +1,24 @@
+{
+  "comparison": {
+    "nominatim": {
+      "pois": 4,
+      "requests": 5,
+      "time_seconds": 4.78,
+      "cost_usd": 0,
+      "avg_kb_per_record": 0.26
+    },
+    "google_maps": {
+      "pois": 0,
+      "requests": 5,
+      "time_seconds": 2.051478,
+      "cost_usd": 0.16,
+      "avg_kb_per_record": 0.45
+    }
+  },
+  "budget_analysis": {
+    "total_usd": 200,
+    "estimate_per_search": 1.6,
+    "possible_searches": 125
+  },
+  "timestamp": "2026-04-15T11:13:40.420283"
+}
