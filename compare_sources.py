@@ -203,8 +203,8 @@ async def main():
         nomintim_per_search = nominatim.time_taken / len(SEARCH_TERMS)
         google_per_search = google.time_taken / len(SEARCH_TERMS) if google.request_count > 0 else 0
         print(f"\n  Average per term:")
-        print(f"    - Nominatim: {nomintim_per_search:.2f}s/term → FREE")
-        print(f"    - Google: {google_per_search:.2f}s/term → $0.032/request")
+        print(f"    - Nominatim: {nomintim_per_search:.2f}s/term = FREE")
+        print(f"    - Google: {google_per_search:.2f}s/term = $0.032/request")
 
     print("\n" + "="*85)
 

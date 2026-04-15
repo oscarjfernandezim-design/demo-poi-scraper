@@ -7,17 +7,43 @@
       "time_seconds": 4.78,
       "cost_usd": 0,
       "avg_kb_per_record": 0.26,
-      "sample_poi": "Sarge's Delicatessan & Diner (restaurant)"
+      "sample_poi": "Sarge's Delicatessan & Diner (restaurant, 40.7439, -73.9777)",
+      "velocity_per_search": "0.96s per term"
     },
     "google_maps": {
-      "status": "setup_required",
-      "pois": 0,
+      "status": "working",
+      "pois": 34,
       "requests": 5,
-      "time_seconds": 1.56,
+      "time_seconds": 2.10,
       "cost_usd": 0.16,
       "avg_kb_per_record": 0.45,
-      "error": "Places API not enabled in Google Cloud Console",
-      "setup_time_minutes": 5
+      "sample_poi": "Fairway Market Kips Bay (cafe, rating: 4.3, reviews: 2357)",
+      "velocity_per_search": "0.42s per term (2.3x faster)",
+      "includes": ["ratings", "reviews", "business_hours", "website", "phone", "photos"]
+    }
+  },
+  "comparisons": {
+    "speed": {
+      "winner": "Google Maps",
+      "ratio": "2.3x faster",
+      "google": "0.42s/term",
+      "nominatim": "0.96s/term"
+    },
+    "quantity": {
+      "winner": "Nominatim",
+      "ratio": "29% more POIs",
+      "google": 34,
+      "nominatim": 44
+    },
+    "quality": {
+      "winner": "Google Maps",
+      "includes": "ratings (2357 reviews in sample), business hours, website, phone",
+      "nominatim_includes": "name and coordinates only"
+    },
+    "cost": {
+      "winner": "Nominatim",
+      "google": "$0.16 per search",
+      "nominatim": "FREE"
     }
   },
   "budget_analysis": {
@@ -25,16 +51,44 @@
     "nominatim_cost": 0,
     "google_cost_per_search": 0.16,
     "google_searches_possible": 1250,
-    "google_pois_estimated": 1250,
-    "recommendation": "Hybrid: Use Nominatim now (free), enable Google to test (50 USD budget), decide in 1 month"
+    "google_pois_estimated": 42500,
+    "nominatim_pois_estimated": 630000
   },
-  "next_steps": [
-    "1. Go to: https://console.cloud.google.com/",
-    "2. Search for: Places API",
-    "3. Click Enable",
-    "4. Wait 1-2 minutes",
-    "5. Run: python compare_sources.py",
-    "6. Compare results directly"
-  ],
-  "timestamp": "2026-04-15T11:20:00"
+  "scenarios": {
+    "scenario_a_nominatim_only": {
+      "investment": 0,
+      "annual_pois": 630000,
+      "annual_cost": 0,
+      "roi": "Infinite"
+    },
+    "scenario_b_google_only": {
+      "investment": 200,
+      "annual_pois": 510000,
+      "annual_cost": 2400,
+      "includes": "ratings, reviews, hours, photos, website",
+      "roi": "Requires $0.005+/POI selling price"
+    },
+    "scenario_c_hybrid_recommended": {
+      "phase_1": "Nominatim production - $0",
+      "phase_2": "Google testing - $50 (312 searches)",
+      "phase_3": "Comparison - Week 3",
+      "phase_4": "Decision - Month 2",
+      "phase_5": "Scale - $150 remaining",
+      "total_risk": "LOW",
+      "flexibility": "HIGH"
+    }
+  },
+  "recommendation": {
+    "for_syed": "Hybrid Approach (Scenario C)",
+    "reason": "Minimal risk, maximum data for decision making",
+    "steps": [
+      "1. Deploy Nominatim now ($0)",
+      "2. Invest $50 in Google testing (312 searches)",
+      "3. Compare results in 1 month",
+      "4. Scale with $150 remaining data"
+    ]
+  },
+  "timestamp": "2026-04-15T11:35:00",
+  "test_area": "NYC Times Square (40.7380 to 40.7489, -73.9789 to -73.9680)",
+  "search_terms": ["restaurant", "cafe", "library", "pharmacy", "bank"]
 }
