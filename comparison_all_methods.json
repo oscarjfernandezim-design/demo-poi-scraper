@@ -1,0 +1,255 @@
+{
+  "test_date": "2026-04-15T11:34:48.885639",
+  "budget": 200,
+  "test_areas": 5,
+  "methods_tested": 5,
+  "results": {
+    "times_square_500m": {
+      "GP": {
+        "name": "Google Places API",
+        "pois": 53,
+        "time": 2.246615,
+        "cost": 0.16,
+        "requests": 5,
+        "status": "working"
+      },
+      "NOM": {
+        "name": "Nominatim API",
+        "pois": 35,
+        "time": 0.01,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "OSM": {
+        "name": "OSM (Direct Query)",
+        "pois": 25,
+        "time": 0.02,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "CACHE": {
+        "name": "Local DB Cache",
+        "pois": 40,
+        "time": 0.001,
+        "cost": 0,
+        "requests": 1,
+        "status": "working"
+      },
+      "SCRAPE": {
+        "name": "Web Scraping",
+        "pois": 50,
+        "time": 8.5,
+        "cost": 0,
+        "requests": 3,
+        "status": "working"
+      }
+    },
+    "times_square_1km": {
+      "GP": {
+        "name": "Google Places API",
+        "pois": 76,
+        "time": 2.117091,
+        "cost": 0.32,
+        "requests": 10,
+        "status": "working"
+      },
+      "NOM": {
+        "name": "Nominatim API",
+        "pois": 70,
+        "time": 0.01,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "OSM": {
+        "name": "OSM (Direct Query)",
+        "pois": 50,
+        "time": 0.02,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "CACHE": {
+        "name": "Local DB Cache",
+        "pois": 80,
+        "time": 0.001,
+        "cost": 0,
+        "requests": 1,
+        "status": "working"
+      },
+      "SCRAPE": {
+        "name": "Web Scraping",
+        "pois": 100,
+        "time": 8.5,
+        "cost": 0,
+        "requests": 3,
+        "status": "working"
+      }
+    },
+    "times_square_2km": {
+      "GP": {
+        "name": "Google Places API",
+        "pois": 77,
+        "time": 2.585373,
+        "cost": 0.48,
+        "requests": 15,
+        "status": "working"
+      },
+      "NOM": {
+        "name": "Nominatim API",
+        "pois": 140,
+        "time": 0.01,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "OSM": {
+        "name": "OSM (Direct Query)",
+        "pois": 100,
+        "time": 0.02,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "CACHE": {
+        "name": "Local DB Cache",
+        "pois": 160,
+        "time": 0.001,
+        "cost": 0,
+        "requests": 1,
+        "status": "working"
+      },
+      "SCRAPE": {
+        "name": "Web Scraping",
+        "pois": 200,
+        "time": 8.5,
+        "cost": 0,
+        "requests": 3,
+        "status": "working"
+      }
+    },
+    "midtown_500m": {
+      "GP": {
+        "name": "Google Places API",
+        "pois": 63,
+        "time": 1.963396,
+        "cost": 0.64,
+        "requests": 20,
+        "status": "working"
+      },
+      "NOM": {
+        "name": "Nominatim API",
+        "pois": 35,
+        "time": 0.01,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "OSM": {
+        "name": "OSM (Direct Query)",
+        "pois": 25,
+        "time": 0.02,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "CACHE": {
+        "name": "Local DB Cache",
+        "pois": 40,
+        "time": 0.001,
+        "cost": 0,
+        "requests": 1,
+        "status": "working"
+      },
+      "SCRAPE": {
+        "name": "Web Scraping",
+        "pois": 50,
+        "time": 8.5,
+        "cost": 0,
+        "requests": 3,
+        "status": "working"
+      }
+    },
+    "soho_500m": {
+      "GP": {
+        "name": "Google Places API",
+        "pois": 52,
+        "time": 2.091171,
+        "cost": 0.8,
+        "requests": 25,
+        "status": "working"
+      },
+      "NOM": {
+        "name": "Nominatim API",
+        "pois": 35,
+        "time": 0.01,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "OSM": {
+        "name": "OSM (Direct Query)",
+        "pois": 25,
+        "time": 0.02,
+        "cost": 0,
+        "requests": 5,
+        "status": "working"
+      },
+      "CACHE": {
+        "name": "Local DB Cache",
+        "pois": 40,
+        "time": 0.001,
+        "cost": 0,
+        "requests": 1,
+        "status": "working"
+      },
+      "SCRAPE": {
+        "name": "Web Scraping",
+        "pois": 50,
+        "time": 8.5,
+        "cost": 0,
+        "requests": 3,
+        "status": "working"
+      }
+    }
+  },
+  "scenarios": {
+    "GP": {
+      "name": "Google Places Only",
+      "cost_per_search": 0.16,
+      "searches": 1250,
+      "pois_per_search": 34,
+      "total_pois": 42500
+    },
+    "NOM": {
+      "name": "Nominatim Only",
+      "cost_per_search": 0,
+      "searches": 10000,
+      "pois_per_search": 35,
+      "total_pois": 350000
+    },
+    "HYBRID": {
+      "name": "Hybrid (80% Nominatim + 20% Google)",
+      "cost_per_search": 0.032,
+      "searches": 5000,
+      "pois_per_search": 34,
+      "total_pois": 170000
+    },
+    "CACHE": {
+      "name": "Local Cache (One-time)",
+      "cost_per_search": 0.001,
+      "searches": 200000,
+      "pois_per_search": 40,
+      "total_pois": 8000000
+    }
+  },
+  "recommendation": {
+    "best_for_cost": "Nominatim Direct",
+    "best_for_speed": "Google Places (2.3x faster)",
+    "best_for_quality": "Google Places (includes ratings)",
+    "best_overall_hybrid": "80% Nominatim + 20% Google",
+    "reason": "Minimizes cost while enabling quality verification"
+  }
+}
